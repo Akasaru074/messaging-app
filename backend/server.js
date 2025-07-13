@@ -15,10 +15,12 @@ app.post("/api/messages", async(req, resp)=>{
 
     if (!req.body || !req.body.content) return resp.sendStatus(400);
     const uuid = crypto.randomUUID();
+    const author = req.body.author;
     const content = req.body.content;
     const date = new Date(new Date().toLocaleString("russian", {timeZone: "Asia/Vladivostok"}));
     const message = {
         "uuid": uuid,
+        "author": author,
         "content": content,
         "date": `${date.getDate()}.${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}.${date.getFullYear()} ${date.getHours() < 10 ? '0' : ''}${date.getHours()}:${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()}`
     }

@@ -10,8 +10,8 @@
         </thead>
         
         <tbody>
-            <tr *ngFor="let message of messages$ | async">
-                <!-- <th scope="row">{{message.author}}</th> -->
+            <tr *ngFor="let message of messages$ | async" [ngClass]="{'limish': message.author == nickname}">
+                <th scope="row">{{message.author}}</th>
                 <th scope="row">{{message.date}}</th>
                 <th scope="row">{{message.content}}</th>
             </tr>
@@ -26,7 +26,7 @@
         <input name="nameField" maxlength="100" required #msgContent="ngModel" [(ngModel)]="newMessage.content">
       </div>
 
-      <p class="mt-1">Ваш никнейм: <b style="color: rgb(20, 156, 20);">{{nickname}}</b></p>
+      <p class="mt-1">Ваш никнейм: <b class="limish">{{nickname}}</b></p>
 
       <button [disabled]="msgContent.invalid" (click)="addMessage()" type="submit" class="btn btn-primary">Отправить</button>
 

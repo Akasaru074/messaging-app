@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 
 export interface Message {
   uuid: string,
+  author: string,
   content: string,
   date: string
 }
@@ -44,9 +45,12 @@ export class AppComponent implements OnInit {
 
     this.nickname = nick;
 
+    this.newMessage.author = nick;
+
   }
 
   newMessage = {
+    "author": "",
     "content": ""
   }
 
