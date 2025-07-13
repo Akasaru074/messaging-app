@@ -3,6 +3,7 @@
     <table class="table table-borderless">
         <thead>
             <tr>
+                <th scope="col">Автор</th>
                 <th scope="col">Дата</th>
                 <th scope="col">Сообщение</th>
             </tr>
@@ -10,6 +11,7 @@
         
         <tbody>
             <tr *ngFor="let message of messages$ | async">
+                <!-- <th scope="row">{{message.author}}</th> -->
                 <th scope="row">{{message.date}}</th>
                 <th scope="row">{{message.content}}</th>
             </tr>
@@ -21,10 +23,14 @@
 
       <div class="mb-3">
         <label class="form-label">Текст сообщения</label>
-        <input name="nameField" required #msgContent="ngModel" [(ngModel)]="newMessage.content">
+        <input name="nameField" maxlength="100" required #msgContent="ngModel" [(ngModel)]="newMessage.content">
       </div>
 
+      <p class="mt-1">Ваш никнейм: <b style="color: rgb(20, 156, 20);">{{nickname}}</b></p>
+
       <button [disabled]="msgContent.invalid" (click)="addMessage()" type="submit" class="btn btn-primary">Отправить</button>
+
+      <button class="ms-3 btn btn-secondary" (click)="refreshMessages()">Обновить сообщения</button>
 
     </form>
 

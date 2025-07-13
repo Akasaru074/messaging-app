@@ -16,7 +16,7 @@ app.post("/api/messages", async(req, resp)=>{
     if (!req.body || !req.body.content) return resp.sendStatus(400);
     const uuid = crypto.randomUUID();
     const content = req.body.content;
-    const date = new Date();
+    const date = new Date(new Date().toLocaleString("russian", {timeZone: "Asia/Vladivostok"}));
     const message = {
         "uuid": uuid,
         "content": content,
