@@ -1,3 +1,31 @@
 <div class="container">
-    <h1>Hello world!</h1>
+    
+    <table class="table table-borderless">
+        <thead>
+            <tr>
+                <th scope="col">Дата</th>
+                <th scope="col">Сообщение</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <tr *ngFor="let message of messages$ | async">
+                <th scope="row">{{message.date}}</th>
+                <th scope="row">{{message.content}}</th>
+            </tr>
+        </tbody>
+
+    </table>
+
+    <form class="my-auto">
+
+      <div class="mb-3">
+        <label class="form-label">Текст сообщения</label>
+        <input name="nameField" required #msgContent="ngModel" [(ngModel)]="newMessage.content">
+      </div>
+
+      <button [disabled]="msgContent.invalid" (click)="addMessage()" type="submit" class="btn btn-primary">Отправить</button>
+
+    </form>
+
 </div>

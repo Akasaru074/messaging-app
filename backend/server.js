@@ -3,10 +3,7 @@ const crypto = require('crypto');
 const app = express();
 const PORT = 3000;
 
-const messages = [{
-    uuid: crypto.randomUUID(),
-    content: 'First message'
-}];
+const messages = [];
 
 app.use(express.json());
 
@@ -19,9 +16,15 @@ app.post("/api/messages", async(req, resp)=>{
     if (!req.body || !req.body.content) return resp.sendStatus(400);
     const uuid = crypto.randomUUID();
     const content = req.body.content;
-    
-    messages.push({uuid: uuid, content: content});
-    resp.status(200).send(`UUID: ${uuid}, content: ${content}`);
+    const date = new Date();
+    const message = {
+        "uuid": uuid,
+        "content": content,
+        "date": `${date.getDate()}.${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}.${date.getFullYear()} ${date.getHours() < 10 ? '0' : ''}${date.getHours()}:${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()}`
+    }
+
+    messages.push(message); 
+    resp.status(200).send(message);
 
 });
 
