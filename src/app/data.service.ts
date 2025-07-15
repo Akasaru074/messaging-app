@@ -11,12 +11,20 @@ export class DataService {
   // apiURL = "http://localhost:3000/api/";
   apiURL = "http://185.58.115.54:3000/api/";
 
-  fetchMessages(): Observable<any> {
-    return this.http.get(this.apiURL + "messages");
+  fetchChatRooms(): Observable<any> {
+    return this.http.get(this.apiURL + "chatrooms");
   }
 
-  addMsgReq(body: object): Observable<any> {
-    return this.http.post(this.apiURL + "messages", JSON.stringify(body), {headers: {"Content-Type": "application/json"}});
+  addChatReq(body: object): Observable<any> {
+    return this.http.post(this.apiURL + "chatrooms", JSON.stringify(body), {headers: {"Content-Type": "application/json"}});
+  }
+
+  fetchMessages(uuid: string): Observable<any> {
+    return this.http.get(this.apiURL + "chatrooms/" + uuid);
+  }
+
+  addMsgReq(uuid: string, body: object): Observable<any> {
+    return this.http.post(this.apiURL + "chatrooms/" + uuid, JSON.stringify(body), {headers: {"Content-Type": "application/json"}});
   }
 
 

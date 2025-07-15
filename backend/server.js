@@ -3,8 +3,17 @@ const crypto = require('crypto');
 const app = express();
 const PORT = 3000;
 
-const chatRooms = [];
-const chatRoomMessages = [];
+const standardChatRoomUUID = crypto.randomUUID();
+
+const chatRooms = [{
+    "uuid": standardChatRoomUUID,
+    "author": "система",
+    "name": "стандартная комната"
+}];
+const chatRoomMessages = [{
+    "chatRoomUUID": standardChatRoomUUID,
+    "messages": []
+}];
 
 app.use(express.json());
 
@@ -63,7 +72,7 @@ app.post("/api/chatRooms/:chatRoomUUID", async(req, resp)=>{
 app.use(express.static(__dirname + "/public/"));
 
 app.get('*', (_, resp) => {
-  resp.status(404).sendFile(__dirname + "/notFound.html");
+  resp.status(404).sendFile(__dirname + "/public/index.html");
 });
 
 app.listen(PORT, ()=>{

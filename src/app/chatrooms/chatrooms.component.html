@@ -1,0 +1,35 @@
+<div class="container">
+    <h1>Чатовые комнаты</h1>
+    <table class="table table-borderless">
+        <thead>
+            <tr>
+                <th scope="col">Автор</th>
+                <th scope="col">Название</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <tr *ngFor="let chatRoom of chatRooms$ | async" [routerLink]="chatRoom.uuid" [ngClass]="{'limish': chatRoom.author == nickName}"
+            style="cursor: pointer;" >
+                <th scope="row">{{chatRoom.author}}</th>
+                <th scope="row">{{chatRoom.name}}</th>
+            </tr>
+        </tbody>
+    </table>
+
+    <form class="my-auto">
+
+      <div class="mb-3">
+        <label class="form-label">Название комнаты</label>
+        <input name="nameField" maxlength="30" required #msgContent="ngModel" [(ngModel)]="newChatRoom.name">
+      </div>
+
+      <p class="mt-1">Ваш никнейм: <b class="limish">{{nickName}}</b></p>
+
+      <button [disabled]="msgContent.invalid" (click)="addChatRoom()" type="submit" class="btn btn-primary">Создать</button>
+
+      <button class="ms-3 btn btn-secondary" (click)="refreshChatRooms()">Обновить комнаты</button>
+
+    </form>
+
+</div>

@@ -6,12 +6,25 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http'
 import { FormsModule } from '@angular/forms';
+import { ChatroomComponent } from './chatroom/chatroom.component';
+import { ChatroomsComponent } from './chatrooms/chatrooms.component';
 
-const routes: Routes = [];
+const routes: Routes = [{
+  path: ':uuid',
+  component: ChatroomComponent
+}, {
+  path: '',
+  component: ChatroomsComponent
+}, {
+  path: '**',
+  redirectTo: ''
+}];
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ChatroomComponent,
+    ChatroomsComponent
   ],
   imports: [
     BrowserModule,
