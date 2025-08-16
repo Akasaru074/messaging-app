@@ -1,5 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
+const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
@@ -14,6 +15,12 @@ const chatRoomMessages = [{
     "chatRoomUUID": standardChatRoomUUID,
     "messages": []
 }];
+
+const corsOptions = {
+    origin: 'https://185.58.115.54:81'
+}
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
@@ -67,12 +74,6 @@ app.post("/api/chatRooms/:chatRoomUUID", async(req, resp)=>{
     chatRoomMessages[chatRoomIndex].messages.push(message); 
     resp.status(200).send(message);
 
-});
-
-app.use(express.static(__dirname + "/public/"));
-
-app.get('*', (_, resp) => {
-  resp.status(404).sendFile(__dirname + "/public/index.html");
 });
 
 app.listen(PORT, ()=>{
