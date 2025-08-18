@@ -4,11 +4,16 @@ import { Observable } from 'rxjs';
 import { NicknameService } from '../nickname.service';
 import { ActivatedRoute } from '@angular/router';
 
-export interface Message {
+interface Message {
   uuid: string,
   author: string,
   content: string,
   date: string
+}
+
+interface ChatRoom {
+  author: string,
+  name: string
 }
 
 @Component({
@@ -24,6 +29,7 @@ export class ChatroomComponent implements OnInit {
     addMessage$!: Observable<Message>;
     nickname!: string;
     uuid!: string
+    chatName$!: string;
   
     ngOnInit(): void {
       this.uuid = this.route.snapshot.paramMap.get('uuid') || "";
@@ -32,6 +38,10 @@ export class ChatroomComponent implements OnInit {
       
       this.nickname = this.nickServ.nickname || "[Nickname hasn't loaded]";
       this.newMessage.author = this.nickname;
+
+      this.dataServ.fetchChatInfo(this.uuid).subscribe({
+        next: chat=>{this.chatName$ = chat.name}
+      })
 
   
     }

@@ -8,7 +8,8 @@ import { Observable } from 'rxjs';
 export class DataService {
   constructor(private http: HttpClient) { }
 
-  apiURL = "http://185.58.115.54:81/api/";
+  // apiURL = "http://localhost:3000/api/";
+  apiURL = "https://185.58.115.54:81/api/";
 
   fetchChatRooms(): Observable<any> {
     return this.http.get(this.apiURL + "chatrooms");
@@ -18,12 +19,16 @@ export class DataService {
     return this.http.post(this.apiURL + "chatrooms", JSON.stringify(body), {headers: {"Content-Type": "application/json"}});
   }
 
-  fetchMessages(uuid: string): Observable<any> {
+  fetchChatInfo(uuid: string): Observable<any> {
     return this.http.get(this.apiURL + "chatrooms/" + uuid);
   }
 
+  fetchMessages(uuid: string): Observable<any> {
+    return this.http.get(`${this.apiURL}chatrooms/${uuid}/messages`);
+  }
+
   addMsgReq(uuid: string, body: object): Observable<any> {
-    return this.http.post(this.apiURL + "chatrooms/" + uuid, JSON.stringify(body), {headers: {"Content-Type": "application/json"}});
+    return this.http.post(`${this.apiURL}chatrooms/${uuid}/messages`, JSON.stringify(body), {headers: {"Content-Type": "application/json"}});
   }
 
 

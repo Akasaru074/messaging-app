@@ -26,8 +26,6 @@ export class ChatroomsComponent {
 
       this.nickName = this.nickServ.nickname || "[nickname hasn't loaded]";
       this.newChatRoom.author = this.nickName;
-
-      
       
   }
 
