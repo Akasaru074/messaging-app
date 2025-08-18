@@ -76,6 +76,6 @@ app.post("/api/chatRooms/:chatRoomUUID", async(req, resp)=>{
 
 });
 
-app.listen(PORT, ()=>{
+app.listen(PORT, "127.0.0.1", ()=>{
     console.log(`Server is listening on port ${PORT}...`);
 });
