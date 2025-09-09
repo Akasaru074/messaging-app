@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { Observable } from 'rxjs';
-import { NicknameService } from '../nickname.service';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 interface Message {
   uuid: string,
@@ -17,12 +17,12 @@ interface Message {
   styleUrls: ['./chatroom.component.css']
 })
 export class ChatroomComponent implements OnInit {
-  constructor (private dataServ: DataService, private nickServ: NicknameService, private route: ActivatedRoute) {};
+  constructor (private dataServ: DataService, private auth: AuthService, private route: ActivatedRoute) {};
     title = 'messaging-app';
   
     messages$!: Observable<Message[]>;
     addMessage$!: Observable<Message>;
-    nickname!: string;
+    nickname: string | null = null;
     uuid!: string
     chatName$!: string;
   
@@ -31,8 +31,8 @@ export class ChatroomComponent implements OnInit {
 
       this.refreshMessages();
       
-      this.nickname = this.nickServ.nickname || "[Nickname hasn't loaded]";
-      this.newMessage.author = this.nickname;
+      this.nickname = this.auth.getUserName();
+      this.newMessage.author = this.nickname || "";
 
       this.dataServ.fetchChatInfo(this.uuid).subscribe({
         next: chat=>{this.chatName$ = chat.name}

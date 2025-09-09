@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NicknameService } from './nickname.service';
 import { AuthService } from './auth.service';
 
 @Component({
@@ -8,9 +7,9 @@ import { AuthService } from './auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor (private nickServ: NicknameService) {};
+  constructor () {};
   ngOnInit(): void {
-    this.nickServ.generateNickname();
+    
   }
 
 }

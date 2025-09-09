@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
+import { HttpClientModule } from '@angular/common/http'
 import { FormsModule } from '@angular/forms';
 import { ChatroomComponent } from './chatroom/chatroom.component';
 import { ChatroomsComponent } from './chatrooms/chatrooms.component';

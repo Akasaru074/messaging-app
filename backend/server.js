@@ -26,8 +26,8 @@ const chatRoomMessages = new Map();
 chatRoomMessages.set(standardChatRoomUUID, []);
 
 const corsOptions = {
-    // origin: 'https://185.58.115.54:81',
-    origin: 'http://localhost:4200',
+    origin: 'https://185.58.115.54:81',
+    // origin: 'http://localhost:4200',
     credentials: true
 }
 
@@ -109,12 +109,14 @@ app.post("/api/chatRooms/:chatRoomUUID/messages", authenticateToken, async(req, 
 app.get("/auth", async(req, resp)=>{
     const authCookie = req.cookies['authcookie'];
     if (!authCookie) return resp.status(200).json({authenticated: false});
+    let user = null;
 
-    jwt.verify(authCookie, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
+    jwt.verify(authCookie, process.env.ACCESS_TOKEN_SECRET, (err, u)=>{
         if (err) return resp.status(200).json({authenticated: false});
-    })
+        user = u;
+    });
 
-    return resp.status(200).json({authenticated: true});
+    return resp.status(200).json({authenticated: true, username: user.username});
 
 });
 
@@ -151,12 +153,6 @@ app.post("/auth/login", async(req, resp)=>{
     resp.status(200).json({authenticated: true, username: username});
 
 });
-
-// app.use(express.static(__dirname + "/public/"));
-
-// app.get('*', (_, resp) => {
-//   resp.status(404).sendFile(__dirname + "/public/index.html");
-// });
 
 app.listen(PORT, "127.0.0.1", ()=>{
     console.log(`Server is listening on port ${PORT}...`);

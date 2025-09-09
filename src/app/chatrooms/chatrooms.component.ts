@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService } from '../data.service';
 import { Observable } from 'rxjs';
-import { NicknameService } from '../nickname.service';
+import { AuthService } from '../auth.service';
 
 interface ChatRoom {
   uuid: string,
@@ -15,17 +15,17 @@ interface ChatRoom {
   styleUrls: ['./chatrooms.component.css']
 })
 export class ChatroomsComponent {
-  constructor (private dataServ: DataService, private nickServ: NicknameService) {};
+  constructor (private dataServ: DataService, private auth: AuthService) {};
 
   chatRooms$!: Observable<ChatRoom[]>;
   addChatRoom$!: Observable<ChatRoom>;
-  nickName!: string;
+  nickName: string | null = null;
 
   ngOnInit(): void {
       this.refreshChatRooms();
 
-      this.nickName = this.nickServ.nickname || "[nickname hasn't loaded]";
-      this.newChatRoom.author = this.nickName;
+      this.nickName = this.auth.getUserName();
+      this.newChatRoom.author = this.nickName || "";
       
   }
 

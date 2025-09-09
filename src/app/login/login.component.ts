@@ -39,7 +39,7 @@ export class LoginComponent {
   async submit() {
     this.reqInProcess = true;
     this.auth.login(this.credentials.login, this.credentials.password).subscribe({
-        next: () => {
+        next: (resp: any) => {
           this.redirect();
         },
         error: err => {
