@@ -4,17 +4,26 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClientModule } from '@angular/common/http'
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
 import { FormsModule } from '@angular/forms';
 import { ChatroomComponent } from './chatroom/chatroom.component';
 import { ChatroomsComponent } from './chatrooms/chatrooms.component';
+import { LoginComponent } from './login/login.component';
+import { authGuard } from './auth.guard';
+import { loginGuard } from './login.guard';
 
 const routes: Routes = [{
+  path: 'login',
+  component: LoginComponent,
+  canActivate: [loginGuard]
+}, {
   path: ':uuid',
-  component: ChatroomComponent
+  component: ChatroomComponent,
+  canActivate: [authGuard]
 }, {
   path: '',
-  component: ChatroomsComponent
+  component: ChatroomsComponent,
+  canActivate: [authGuard]
 }, {
   path: '**',
   redirectTo: ''
@@ -24,7 +33,8 @@ const routes: Routes = [{
   declarations: [
     AppComponent,
     ChatroomComponent,
-    ChatroomsComponent
+    ChatroomsComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

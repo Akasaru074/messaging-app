@@ -8,27 +8,27 @@ import { Observable } from 'rxjs';
 export class DataService {
   constructor(private http: HttpClient) { }
 
-  // apiURL = "http://localhost:3000/api/";
-  apiURL = "https://185.58.115.54:81/api/";
+  private apiURL = "http://localhost:3000/api/";
+  // private apiURL = "https://185.58.115.54:81/api/";
 
   fetchChatRooms(): Observable<any> {
-    return this.http.get(this.apiURL + "chatrooms");
+    return this.http.get(this.apiURL + "chatrooms", {withCredentials: true});
   }
 
   addChatReq(body: object): Observable<any> {
-    return this.http.post(this.apiURL + "chatrooms", JSON.stringify(body), {headers: {"Content-Type": "application/json"}});
+    return this.http.post(this.apiURL + "chatrooms", JSON.stringify(body), {headers: {"Content-Type": "application/json"}, withCredentials: true});
   }
 
   fetchChatInfo(uuid: string): Observable<any> {
-    return this.http.get(this.apiURL + "chatrooms/" + uuid);
+    return this.http.get(this.apiURL + "chatrooms/" + uuid, {withCredentials: true});
   }
 
   fetchMessages(uuid: string): Observable<any> {
-    return this.http.get(`${this.apiURL}chatrooms/${uuid}/messages`);
+    return this.http.get(`${this.apiURL}chatrooms/${uuid}/messages`, {withCredentials: true});
   }
 
   addMsgReq(uuid: string, body: object): Observable<any> {
-    return this.http.post(`${this.apiURL}chatrooms/${uuid}/messages`, JSON.stringify(body), {headers: {"Content-Type": "application/json"}});
+    return this.http.post(`${this.apiURL}chatrooms/${uuid}/messages`, JSON.stringify(body), {headers: {"Content-Type": "application/json"}, withCredentials: true});
   }
 
 

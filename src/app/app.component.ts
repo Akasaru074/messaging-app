@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NicknameService } from './nickname.service';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',

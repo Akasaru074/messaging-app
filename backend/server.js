@@ -1,9 +1,14 @@
 const express = require('express');
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
+const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
+const jwt = require("jsonwebtoken");
 const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
+require('dotenv').config();
 const standardChatRoomUUID = crypto.randomUUID();
 
 const chatRooms = new Map();
@@ -12,18 +17,39 @@ chatRooms.set(standardChatRoomUUID, {
     name: 'стандартная комната'
 });
 
+const users = [{
+    username: 'admin',
+    password: bcrypt.hashSync(process.env.ADMIN_PASSWORD, 10)
+}];
+
 const chatRoomMessages = new Map();
 chatRoomMessages.set(standardChatRoomUUID, []);
 
 const corsOptions = {
-    origin: 'https://185.58.115.54:81'
+    // origin: 'https://185.58.115.54:81',
+    origin: 'http://localhost:4200',
+    credentials: true
+}
+
+function authenticateToken(req, resp, next) {
+    const authCookie = req.cookies['authcookie'];
+    if (!authCookie) return resp.sendStatus(401);
+
+    jwt.verify(authCookie, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
+        if (err) return resp.sendStatus(403);
+        req.user = user;
+        next();
+    })
+
 }
 
 app.use(cors(corsOptions));
 
-app.use(express.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use(cookieParser());
 
-app.get("/api/chatrooms", async(_, resp)=>{
+app.get("/api/chatrooms", authenticateToken, async(_, resp)=>{
 
     const objChatRooms = [];
     for (let uuid in Object.fromEntries(chatRooms)) objChatRooms.push({uuid: uuid, ...chatRooms.get(uuid)})
@@ -31,7 +57,7 @@ app.get("/api/chatrooms", async(_, resp)=>{
     resp.send(objChatRooms);
 });
 
-app.post("/api/chatrooms", async(req, resp)=>{
+app.post("/api/chatrooms", authenticateToken, async(req, resp)=>{
 
     if (!req.body || !req.body.author || !req.body.name) return resp.sendStatus(400);
     const uuid = crypto.randomUUID();
@@ -47,19 +73,19 @@ app.post("/api/chatrooms", async(req, resp)=>{
 
 });
 
-app.get("/api/chatRooms/:chatRoomUUID", async(req, resp)=>{
+app.get("/api/chatRooms/:chatRoomUUID", authenticateToken, async(req, resp)=>{
     const chatRoomUUID = req.params.chatRoomUUID;
     if (chatRooms.has(chatRoomUUID)) resp.send(chatRooms.get(chatRoomUUID));
     else resp.status(404).send("Room not found");
 });
 
-app.get("/api/chatRooms/:chatRoomUUID/messages", async(req, resp)=>{
+app.get("/api/chatRooms/:chatRoomUUID/messages", authenticateToken, async(req, resp)=>{
     const chatRoomUUID = req.params.chatRoomUUID;
     if (chatRoomMessages.has(chatRoomUUID)) resp.send(chatRoomMessages.get(chatRoomUUID));
     else resp.status(404).send("Room not found");
 });
 
-app.post("/api/chatRooms/:chatRoomUUID/messages", async(req, resp)=>{
+app.post("/api/chatRooms/:chatRoomUUID/messages", authenticateToken, async(req, resp)=>{
 
     if (!req.body || !req.body.content || !req.body.author) return resp.sendStatus(400);
     const chatRoomUUID = req.params.chatRoomUUID;
@@ -80,12 +106,58 @@ app.post("/api/chatRooms/:chatRoomUUID/messages", async(req, resp)=>{
 
 });
 
+app.get("/auth", async(req, resp)=>{
+    const authCookie = req.cookies['authcookie'];
+    if (!authCookie) return resp.status(200).json({authenticated: false});
+
+    jwt.verify(authCookie, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
+        if (err) return resp.status(200).json({authenticated: false});
+    })
+
+    return resp.status(200).json({authenticated: true});
+
+});
+
+app.post("/auth/login", async(req, resp)=>{
+
+    if (!req.body.username || !req.body.password) {
+        resp.status(400).json({msg: "Bad username or password"});
+        return;
+    }
+
+    const {username, password} = req.body;
+
+    let user = null;
+    users.forEach(u => {
+        if (u.username === username) user = u;;
+        return;
+    });
+    if (user == null) {
+        resp.status(404).json({msg: "User not found"});
+        return;
+    }
+
+    const isPassValid = await bcrypt.compare(password, user.password);
+
+    if (!isPassValid) {
+        resp.status(403).json({msg: 'Password incorrect'});
+        return;
+    }
+
+    const token = jwt.sign({username, password}, process.env.ACCESS_TOKEN_SECRET);
+
+    resp.cookie('authcookie', token, {maxAge:900000, httpOnly: true, secure: false});
+
+    resp.status(200).json({authenticated: true, username: username});
+
+});
+
 // app.use(express.static(__dirname + "/public/"));
 
 // app.get('*', (_, resp) => {
 //   resp.status(404).sendFile(__dirname + "/public/index.html");
 // });
 
-app.listen(PORT, ()=>{
+app.listen(PORT, "127.0.0.1", ()=>{
     console.log(`Server is listening on port ${PORT}...`);
 });

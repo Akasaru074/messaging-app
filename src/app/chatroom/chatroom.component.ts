@@ -11,11 +11,6 @@ interface Message {
   date: string
 }
 
-interface ChatRoom {
-  author: string,
-  name: string
-}
-
 @Component({
   selector: 'app-chatroom',
   templateUrl: './chatroom.component.html',

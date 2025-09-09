@@ -1,0 +1,17 @@
+<div class="login-container">
+    <div class="login-box">
+        <h1>Авторизация</h1>
+        <form>
+            <div class="my-3">
+                <label for="login">Логин</label>
+                <input type="text" id="login" name="loginField" #login="ngModel" [(ngModel)]="credentials.login" maxlength="15" required>
+            </div>
+            <div class="my-3">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="passwordField" #password="ngModel" [(ngModel)]="credentials.password" maxlength="64" required>
+            </div>
+            <ngb-alert *ngIf="loginError.error" [dismissible]="false" type="danger">{{loginError.msg}}</ngb-alert>
+            <button type="submit" [disabled]="login.invalid || password.invalid || reqInProcess" (click)="submit()" class="btn btn-primary mt-3">Войти</button>
+        </form>
+    </div>
+</div>
