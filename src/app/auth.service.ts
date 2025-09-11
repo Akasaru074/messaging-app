@@ -9,7 +9,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   // private authURL = "http://localhost:3000/auth/";
-  private authURL = "https://185.58.115.54:81/auth";
+  private authURL = "https://185.58.115.54:81/auth/";
 
   private username: string | null = null;
 

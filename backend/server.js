@@ -154,6 +154,12 @@ app.post("/auth/login", async(req, resp)=>{
 
 });
 
+// app.use(express.static(__dirname + "/public/"));
+
+// app.get('*', (_, resp) => {
+//   resp.status(404).sendFile(__dirname + "/public/index.html");
+// });
+
 app.listen(PORT, "127.0.0.1", ()=>{
     console.log(`Server is listening on port ${PORT}...`);
 });
